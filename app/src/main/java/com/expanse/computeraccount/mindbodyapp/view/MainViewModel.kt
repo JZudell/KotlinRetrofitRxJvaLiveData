@@ -8,6 +8,7 @@ import com.expanse.computeraccount.mindbodyapp.api.ApiService
 import com.expanse.computeraccount.mindbodyapp.api.RetrofitClientCountries
 import com.expanse.computeraccount.mindbodyapp.api.RetrofitClientProvinces
 import com.google.gson.JsonArray
+import com.google.gson.JsonParser
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -20,7 +21,12 @@ class MainViewModel : ViewModel() {
     val TAG = "MainViewModel"
     internal lateinit var jsonApi: ApiService
     internal lateinit var compositeDisposable: CompositeDisposable
-    var fragmentIdCurrent: Int = 1 // keeps track of which fragment is visible to user
+    var fragmentIdCurrent: Int = returnTest() // keeps track of which fragment is visible to user
+
+    fun returnTest(): Int{
+        println("FRAGMENTID ESTABLISHED")
+        return 1
+    }
 
 
     //This is called when ViewModel.countriesInfo.observe() gets called in MainActivity
@@ -30,6 +36,7 @@ class MainViewModel : ViewModel() {
             Log.d(TAG,"ViewModel Countries Initiated")
 
             makeCountryApiCall()
+
         }
     }
 
@@ -68,9 +75,12 @@ class MainViewModel : ViewModel() {
         compositeDisposable.add(jsonApi.countries
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{countries-> printJsonCountries(countries)}
+            //subscribe( {1st} , {2nd} )   1st is success handling, 2nd is error handling. when error, manually created JsonArray with error message
+            .subscribe({countries-> printJsonCountries(countries)},{t: Throwable? -> printJsonCountries(JsonParser().parse("[{\"error\":\""+t.toString().replace("retrofit2.adapter.rxjava2.","")+"\"}]") as JsonArray)})
+
         )
     }
+
 
     fun makeProvinceApiCall(id:Int){
 
@@ -82,13 +92,18 @@ class MainViewModel : ViewModel() {
         compositeDisposable.add(jsonApi.getProvincesApi(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe{provinces-> printJsonProvince(provinces)}
+            //subscribe( {1st} , {2nd} )   1st is success handling, 2nd is error handling. when error, manually created JsonArray with error message
+            .subscribe({provinces-> printJsonProvince(provinces)},{t: Throwable? -> printJsonProvince(JsonParser().parse("[{\"error\":\""+t.toString().replace("retrofit2.adapter.rxjava2.","")+"\"},{\"CountryCode\":\""+id+"\"}]") as JsonArray)})
+
         )
     }
     fun printJsonCountries(jsonArray: JsonArray){
+        println("Country API FINISHED")
         countriesInfo.setValue(jsonArray)
     }
     fun printJsonProvince(jsonArray: JsonArray){
+        println("PROVINCE API FINISHED")
         provinceInfo.setValue(jsonArray)
     }
+
 }

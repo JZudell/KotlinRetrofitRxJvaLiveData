@@ -9,13 +9,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.expanse.computeraccount.mindbodyapp.R
 import com.expanse.computeraccount.mindbodyapp.model.Province
 import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.fragment_province.*
 
-
 //ProvinceFragment uses a RecyclerView to show user data
+// Clicking on a RecyclerView item will open implicit intent for browser to search google for the name of the province and country.
+// project directions mentions making touch feedback on lists. both color change and device vibration were implemented.
 class ProvinceFragment : Fragment() {
 
     lateinit var mContext : Context
@@ -31,6 +31,7 @@ class ProvinceFragment : Fragment() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Log.d(TAG, "onCreate")
     }
     var listOfProvince : ArrayList<Province> = ArrayList()
@@ -42,7 +43,9 @@ class ProvinceFragment : Fragment() {
     ): View {
 
 
-        return inflater.inflate(R.layout.fragment_province, container, false)
+        Log.d(TAG,"onCreateView")
+
+        return inflater.inflate(com.expanse.computeraccount.mindbodyapp.R.layout.fragment_province, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -56,6 +59,7 @@ class ProvinceFragment : Fragment() {
 
         setUpListOfData()
         setupRecyclerView()
+        println("LISTOFPROVINCE+++++++++++"+listOfProvince)
         displayData(listOfProvince)
     }
 
@@ -63,6 +67,7 @@ class ProvinceFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
+        (activity as MainActivity).hideLoadingDialog()
 
     }
 
@@ -74,6 +79,7 @@ class ProvinceFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "onStop")
+
     }
 
     override fun onDestroyView() {
@@ -109,25 +115,8 @@ class ProvinceFragment : Fragment() {
 
         provinceRecyclerView.setHasFixedSize(true)
         provinceRecyclerView.layoutManager = LinearLayoutManager(mContext) as RecyclerView.LayoutManager?
-//        provinceRecyclerView.addOnItemTouchListener(
-//            RecyclerItemClickListenr(
-//                mContext,
-//                provinceRecyclerView,
-//                object : RecyclerItemClickListenr.OnItemClickListener {
-//                    override fun onItemLongClick(view: View?, position: Int) {
-//                        println("LongCLick")
-//                    }
-//                    override fun onItemClick(view: View, position: Int) {
-//
-//                        println(adapter.getItem(position).id)
-//
-//                    }
-//                }
-//            )
-//        )
+
     }
-
-
 
 
 

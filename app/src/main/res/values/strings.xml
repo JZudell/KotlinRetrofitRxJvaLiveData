@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MindBodyApp</string>
+    <string name="loading">Loading …</string>
+    <string name="error_message">Error Message:</string>
+    <string name="error_title">Error retrieving data from server, \nWould you like to try again?</string>
+    <string name="no_province">This country has no provinces</string>
+    <string name="no_province_title">No provinces!</string>
+    <string name="ok">OK</string>
 </resources>

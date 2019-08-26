@@ -12,7 +12,6 @@ interface ApiService{
     @get:GET("country")
     val countries: Observable<JsonArray>
 
-
     //notation when parameter needed . the return type is a Observable, possible with RxJava, instead of extending a "DefaultResponse"
     @GET("{id}/province")
     fun getProvincesApi(@Path("id") id: Int): Observable<JsonArray>

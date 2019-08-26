@@ -9,15 +9,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.expanse.computeraccount.mindbodyapp.R
 import com.expanse.computeraccount.mindbodyapp.model.Country
-import com.expanse.computeraccount.mindbodyapp.utils.RecyclerItemClickListenr
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.fragment_countries.*
 
 
-//CountriesFragment uses a RecyclerView with
+//CountriesFragment uses a RecyclerView to show data to user.
+//showing flag images is handled by Coil image library for Kotlin
+//// project directions mentions making touch feedback on lists. both color change and device vibration were implemented.
 class CountriesFragment : Fragment() {
 
     lateinit var mContext : Context
@@ -42,7 +42,7 @@ class CountriesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_countries, container, false)
+        return inflater.inflate(com.expanse.computeraccount.mindbodyapp.R.layout.fragment_countries, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -64,6 +64,7 @@ class CountriesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
+        (activity as MainActivity).hideLoadingDialog()
     }
     fun displayData(jsonArray: JsonArray ){
         Log.d(TAG,"creating adapter")
@@ -113,23 +114,9 @@ class CountriesFragment : Fragment() {
 
         countriesRecyclerView.setHasFixedSize(true)
         countriesRecyclerView.layoutManager = LinearLayoutManager(mContext) as RecyclerView.LayoutManager?
-        countriesRecyclerView.addOnItemTouchListener(
-            RecyclerItemClickListenr(
-                mContext,
-                countriesRecyclerView,
-                object : RecyclerItemClickListenr.OnItemClickListener {
-                    override fun onItemLongClick(view: View?, position: Int) {
-                        println("LongCLick")
-                    }
-                    override fun onItemClick(view: View, position: Int) {
 
-                        (activity as MainActivity).callProvinceApiOnViewModel(adapter.getItem(position).id)
-
-                    }
-                }
-            )
-        )
     }
+
 
 
 
